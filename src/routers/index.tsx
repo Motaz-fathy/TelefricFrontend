@@ -33,6 +33,8 @@ import Privacy from "containers/BlogPage/Privacy";
 import Faqs from "containers/BlogPage/Faqs";
 import MaritimeCheckout from "containers/MerintmeCheckout";
 import CheckOutPrivatePage from "containers/CheckOutPage/CheckOutPrivate";
+import { PrivateTrip } from "containers/ListPrivateTrip/PrivateTrip";
+import { PrivateTripId } from "containers/ListPrivateTrip/PrivateTripId";
 
 export const pages: any[] = [
 	{ path: "/", exact: true, component: PageHome },
@@ -86,6 +88,14 @@ export const pages: any[] = [
 	{ path: "/checkout-maritime", component: MaritimeCheckout },
 	{ path: "/checkout-private", component: CheckOutPrivatePage },
 	//
+
+
+	// 
+
+	{ path: "/private-trip", component: PrivateTrip },
+	{ path: "/private-trip/trip-Id", component: PrivateTripId },
+
+
 ];
 
 const MyRoutes = () => {
