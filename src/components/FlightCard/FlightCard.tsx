@@ -9,36 +9,186 @@ import blue_bus_logo from "images/image 4.png";
 import miniBus from "images/bus1.png";
 
 export interface FlightCardProps {
-	
-	refactoredData?: any;
-
+	className?: string;
+	data: any;
+	travelFrom?: string | null;
+	cityTo?: any;
+	date?: any;
+	travel?: any;
+	filterStation: string;
+	filterBus:string
+	filterToStation:string;
 }
 
 const FlightCard: FC<FlightCardProps> = ({
-	
-	refactoredData,
-	
+	className = "",
+	data,
+	travelFrom,
+	cityTo,
+	travel,
+	date,
+	filterStation,
+	filterToStation,
+	filterBus
 }) => {
-	function removeDuplicates(travelData:any) {
-		const uniqueData = [];
-		const keySet:string[] = [];
-	  
-		for (const item of travelData) {
-		  const key = `${item.trip_url}`;
-	  
-		  if (!keySet.includes(key)) {
-			uniqueData.push(item);
-			keySet.push(key);
-		  }
-		}
-	  
-		return uniqueData;
-	  }
-	  
-	  refactoredData = removeDuplicates(refactoredData);
+	
+	// const [isOpen, setIsOpen] = useState(false);
+	// const { t } = useTranslation();
 	const navigate = useNavigate();
+	// const renderDetailTop = (
+	// 	tripDetails?: any,
+	// 	price?: number | string,
+	// 	stationFrom?: any,
+	// ) => {
+	// 	if (tripDetails?.city_id === cityTo?.id) {
+	// 		return (
+	// 			<div
+	// 				className="mb-5 cursor-pointer px-1 py-1 hover:shadow-lg"
+	// 				onClick={() => {
+	// 					navigate(
+	// 						`/checkout/?${date}/${stationFrom?.id}/${tripDetails?.id}/${data?.id}/${price}/${travel}/${cityTo?.id}/${data?.gateway_id}/${data?.bus?.category}`,
+	// 					);
+	// 				}}
+	// 			>
+	// 				<div className="flex flex-col md:flex-row ">
+	// 					<div className="w-24 flex-shrink-0 md:w-20 md:pt-7 lg:w-24">
+	// 						{/* <img
+    //           src={"https://www.gstatic.com/flights/airline_logos/x/KE.png"}
+    //           className="w-10"
+    //           alt=""
+    //         /> */}
+	// 					</div>
+	// 					<div className="my-5 flex w-1/2 md:my-0">
+	// 						<div className="flex flex-shrink-0 flex-col items-center py-2">
+	// 							<span className="block h-6 w-6 rounded-full border border-neutral-400"></span>
+	// 							<span className="my-1 block flex-grow border-l border-dashed border-neutral-400"></span>
+	// 							<span className="block h-6 w-6 rounded-full border border-neutral-400"></span>
+	// 						</div>
+	// 						<div className="ml-4 space-y-10 text-sm">
+	// 							<div className="flex flex-col space-y-1">
+	// 								<span className=" text-neutral-500 dark:text-neutral-400">
+	// 									{/* Monday, August 12 · 10:00 */}
+	// 								</span>
+	// 								<span className=" font-semibold">{stationFrom?.name}</span>
+	// 							</div>
+	// 							<div className="flex flex-col space-y-1">
+	// 								<span className=" text-neutral-500 dark:text-neutral-400">
+	// 									{/* Monday, August 16 · 10:00 */}
+	// 								</span>
+	// 								<span className=" font-semibold">{tripDetails?.name}</span>
+	// 							</div>
+	// 						</div>
+	// 					</div>
+	// 					<div className="border-l border-neutral-200 dark:border-neutral-700 md:mx-6 lg:mx-10"></div>
+	// 					<ul className="space-y-1 text-sm text-neutral-500 dark:text-neutral-400 md:space-y-2">
+	// 						<li>
+	// 							{t("takeOffTime", { time: `${stationFrom?.arrival_at}` })}{" "}
+	// 						</li>
+	// 						<li>
+	// 							{t("arrivalTime", { time: `${tripDetails?.arrival_at}` })}{" "}
+	// 						</li>
+
+	// 						<li>{t("tripCost", { price: price })}</li>
+	// 						<li>
+	// 							{!!data?.bus ? (
+	// 								<>
+	// 									{data?.bus.type?.charAt(0).toUpperCase() +
+	// 										data?.bus.type?.slice(1)}{" "}
+	// 									· {data?.gateway_id} · {data?.bus?.code}
+	// 								</>
+	// 							) : (
+	// 								<>{data?.gateway_id}</>
+	// 							)}
+	// 						</li>
+	// 					</ul>
+	// 				</div>
+	// 			</div>
+	// 		);
+	// 	}
+	// 	return <></>;
+	// };
+	
+	// console.log(data,9595959595)
+	function getDuration(startTime: string, endTime: string): string {
+		const start = new Date(`1970-01-01T${startTime}Z`);
+		const end = new Date(`1970-01-01T${endTime}Z`);
+		const duration = end.getTime() - start.getTime();
+	  
+		const hours = Math.floor(duration / (1000 * 60 * 60));
+		const minutes = Math.floor((duration / (1000 * 60)) % 60);
+	  
+		return `${hours}h ${minutes}m`;
+	  }
+	  interface City {
+		id: number;
+		name: string;
+	  }
+	  function cityName(cities: City[], id: number): string | undefined {
+		const city = cities.find((city) => city.id === id);
+		return city? city.name : undefined;
+	  }
+
+	  console.log("data fron Flight " , data);
+	  let newTravelDate: {  travel_from: string, travel_to: string, gateway_id: string, arrival_at: string,trip_url: string,travel_at:string,city_from_name : any,city_from:string,city_to:string,city_to_name:any, duration:any,prices_start_with:string,available_seats:string }[] = [];
+	
+	  data.stations_from.flatMap((itemFrom:any) =>
+		  data.stations_to.map((itemTo:any) =>{
+			  newTravelDate.push(
+				  {travel_from: itemFrom.name,
+					  trip_url:`/checkout/?${data.date}/${itemFrom.id}/${itemTo.id}/${data.id}/${data.price_start_with}/${itemFrom.id}/${itemTo.id}/${data.company}/${data.bus.category}`,
+						  // trip_url: `/checkout/?${date}/${stationFrom?.id}/${tripDetails?.id}/${data?.id}/${price}/${travel}/${cityTo?.id}/${data?.gateway_id}/${data?.bus?.category}`,
+					  travel_at:itemFrom.arrival_at,
+					  city_from_name:cityName(data.cities_from,itemFrom.city_id) ,
+					  city_from:itemFrom.city_id,
+					  city_to:itemTo.city_id,
+					  city_to_name:cityName(data.cities_to,itemTo.city_id),
+					  travel_to: itemTo.name,arrival_at:itemTo.arrival_at,
+					  gateway_id:data.gateway_id,
+					  duration : getDuration(itemFrom.arrival_at,itemTo.arrival_at )  ,
+					  prices_start_with:data.prices_start_with.original_price, //their is more than tis opj like offer and after offer price
+					  available_seats:data.available_seats}
+			  )
+		  } ))
+	  	console.log("new Travel Data", newTravelDate)
+	let travelData: { travel_from: string, travel_to: string,gateway_id:string,arrival_at:string , prices_start_with:any , prices_From_Station_To: any }[] = data.stations_from.flatMap((itemFrom:any) =>
+		data.stations_to.map((itemTo:any) => (
+				
+			{ travel_from: itemFrom.name,
+			trip_url:`/checkout/?${data.date}/${itemFrom.id}/${itemTo.id}/${data.id}/${data.price_start_with}/${itemFrom.id}/${itemTo.id}/${data.company}/${data.bus.category}`,
+				// trip_url: `/checkout/?${date}/${stationFrom?.id}/${tripDetails?.id}/${data?.id}/${price}/${travel}/${cityTo?.id}/${data?.gateway_id}/${data?.bus?.category}`,
+			travel_at:itemFrom.arrival_at,
+			city_from_name:cityName(data.cities_from,itemFrom.city_id) ,
+			city_from:itemFrom.city_id,
+			city_to:itemTo.city_id,
+			city_to_name:cityName(data.cities_to,itemTo.city_id),
+			travel_to: itemTo.name,arrival_at:itemTo.arrival_at,
+			gateway_id:data.gateway_id,
+			duration : getDuration(itemFrom.arrival_at,itemTo.arrival_at )  ,
+			prices_start_with:data.prices_start_with.original_price, //their is more than tis opj like offer and after offer price
+			prices_From_Station_To: data.prices_start_with.original_price, //their is more than tis opj like offer and after offer price
+			available_seats:data.available_seats  }))
+	  );
+	
+				console.log("travel Data" , travelData);
+	if(filterStation.length !== 0){
+
+		travelData = travelData.filter((data)=> data.travel_from === filterStation);
+	}
+	if(filterToStation.length !==0){
+		travelData = travelData.filter((data)=>data.travel_to === filterToStation )
+	}
+	if(filterBus.length !==0){
+		travelData = travelData.filter((data)=> data.gateway_id === filterBus)
+	}
+		let pricess = [];
+		
+
+			pricess = newTravelDate.map((trip)=> trip.prices_start_with)
+	
+		console.log(pricess);
 	  const busCardContainer = (data:any) => {
-		return refactoredData?.map((item:any) => (
+	
+		return data?.map((item:any) => (
 		  <div key={item.id} className="flex flex-col bg-white m-0 w-[98%] h-[80%] 
 			lg:h-100
 			md:h-100
@@ -170,11 +320,11 @@ const FlightCard: FC<FlightCardProps> = ({
 			</div>
 		));
 	  };
-	  
+	 
 	return (
 		<>
 		
-			{busCardContainer(refactoredData)}
+			{busCardContainer(travelData)}
 			
 		</>
 	);

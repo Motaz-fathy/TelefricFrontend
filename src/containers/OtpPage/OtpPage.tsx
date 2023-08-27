@@ -2,7 +2,6 @@ import React, { FC, useContext, useEffect, useState } from "react";
 import facebookSvg from "images/Facebook.svg";
 import twitterSvg from "images/Twitter.svg";
 import googleSvg from "images/Google.svg";
-import Image404 from "images/404 (2).png";
 import { Helmet } from "react-helmet";
 import Input from "shared/Input/Input";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,7 +11,8 @@ import useInput from "hooks/useInput";
 import { useAddOtb } from "hooks/DataSend/useOtb";
 import { AppContext } from "components/context/AppContext";
 import OtpInput from "react-otp-input";
-
+import classes from "./OtpPage.module.css";
+import OtpIcon from "./OtpIcon";
 export interface OtpPageProps {
 	className?: string;
 }
@@ -37,63 +37,87 @@ const OtpPage: FC<OtpPageProps> = ({ className = "" }) => {
 		data.append("code", otp);
 		mutate(data);
 	};
+	// return (
+	// 	<div className={`nc-PageLogin ${className}`} data-nc-id="PageLogin">
+	// 		<Helmet>
+	// 			<title>Login || Telefreik For Booking</title>
+	// 		</Helmet>
+	// 		<div className="container mb-24 lg:mb-32">
+	// 			<h2 className="my-20 flex items-center justify-center text-3xl font-semibold leading-[115%] text-neutral-900 dark:text-neutral-100 md:text-5xl md:leading-[115%]">
+	// 				{t("login")}
+	// 			</h2>
+	// 			<div className="mx-auto max-w-md space-y-6">
+	// 				<form className="grid grid-cols-1 gap-6" onSubmit={submitHandler}>
+	// 					<label className="block">
+	// 						<span className="flex items-center justify-between text-neutral-800 dark:text-neutral-200">
+	// 							{t("otp")}
+	// 						</span>
+	// 					</label>
+	// 					<div className="flex w-full  justify-center">
+	// 						<OtpInput
+	// 							value={otp}
+	// 							inputStyle={{
+	// 								height: "3.5rem",
+	// 								width: "3.5rem",
+	// 								border: "1px solid rgb(67,56,202)",
+	// 								borderRadius: 4,
+	// 								color: "text-neutral-800 dark:text-neutral-200",
+	// 								fontWight: "bolder",
+	// 								fontSize: "1.5rem",
+	// 							}}
+	// 							hasErrored={otp?.length <= 4}
+	// 							onChange={(e: any) => setOtp(e)}
+	// 							placeholder="----"
+	// 							isInputNum={true}
+	// 							isInputSecure={true}
+	// 							numInputs={4}
+	// 							separator={<div style={{ marginInline: "0.5rem" }} />}
+	// 							shouldAutoFocus={true}
+	// 							containerStyle={{ direction: "ltr" }}
+	// 						/>
+	// 					</div>
+
+	// 					<ButtonPrimary type="submit">{t("login")}</ButtonPrimary>
+	// 				</form>
+	// 				{/* ==== */}
+	// 			</div>
+	// 		</div>
+	// 	</div>
+	// );
 	return (
-		<div className={`nc-PageLogin ${className}  bg-gradient-to-r from-[#242932] to-[#2B356E] h-[80vh]  relative mb-56`} data-nc-id="PageLogin">
-			<Helmet>
-				<title>Login || Telefreik For Booking</title>
-			</Helmet>
-			<div className="container absolute top-20  lg:mb-32 transition-[0.5s] bg-white w-[80vw] left-2 rounded-[16px] right-2 h-[80vh]">
+		<div className={classes.Form}>
+			<form className={classes.FormCard}>
 
-			<img
-                  className="flex-shrink-0 m-auto"
-                  src={Image404}
-                  alt={"verification"}
-                />
-
-				<h2 className="my-2 flex items-center justify-center text-3xl font-semibold leading-[115%] text-neutral-900 dark:text-neutral-100 md:text-5xl md:leading-[115%]">
-				{t("otp")}
-				</h2>
-				<p className="text-center my-2 text-[#828282]">
-					Enter the verification code we just sent on your email address.
-				</p>
-				<div className="mx-auto max-w-md space-y-6">
-					<form className="grid grid-cols-1 gap-6" onSubmit={submitHandler}>
-						
-						<div className="flex w-full  justify-center">
-							<OtpInput
+			<OtpIcon />
+			<h2 className={classes.OtpHeading}>OTP Verification</h2>
+			<h3 className={classes.OtpDesc}>Enter the verification code we just sent on your email address.</h3>
+			<OtpInput
 								value={otp}
-								inputStyle={{
-									height: "3.5rem",
-									width: "3.5rem",
-									border: "1px solid rgb(67,56,202)",
+							inputStyle={{
+	 								height: "3.5rem",
+	 								width: "3.5rem",
+	 								border: "1px solid rgb(67,56,202)",
 									borderRadius: 4,
 									color: "text-neutral-800 dark:text-neutral-200",
 									fontWight: "bolder",
-									fontSize: "1.5rem",
-								}}
+								fontSize: "1.5rem",
+	 							}}
 								hasErrored={otp?.length <= 4}
 								onChange={(e: any) => setOtp(e)}
 								placeholder="----"
 								isInputNum={true}
 								isInputSecure={true}
-								numInputs={4}
+	 							numInputs={4}
 								separator={<div style={{ marginInline: "0.5rem" }} />}
 								shouldAutoFocus={true}
 								containerStyle={{ direction: "ltr" }}
-							/>
-						</div>
-
-						<ButtonPrimary type="submit">{t("login")}</ButtonPrimary>
-					</form>
-					{/* ==== */}
-				<p className="text-center  text-[#828282]">
-				Didn’t received code? 
-				</p>				
-				<h4  className="text-[#1d4179] text-center hover:cursor-pointer mt-0" style={{margin:"0"}}>Resend</h4>
-				</div>
-			</div>
+	 						/>
+							<button className={classes.OtpBtn} onClick={submitHandler}>Verify</button>
+							<p className={classes.OtpCode} >Didn't received code?</p>
+							<span className={classes.OtbLink}>Resend</span>
+			</form>
 		</div>
-	);
+	)
 };
 
 export default OtpPage;

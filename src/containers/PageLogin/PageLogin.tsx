@@ -82,35 +82,16 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
 		alert("logout success");
 	}, []);
 	return (
-		<div className={`nc-PageLogin ${className} mb-[15vh] bg-gradient-to-r from-[#242932] to-[#2B356E] h-[80vh]  relative`} data-nc-id="PageLogin ">
+		<div className={`nc-PageLogin ${className}`} data-nc-id="PageLogin">
 			<Helmet>
 				<title>Login || Telefreik For Booking</title>
 			</Helmet>
-			<div className="container absolute top-20  lg:mb-32 transition-[0.5s] bg-white w-[80vw] left-2 rounded-[16px] right-2"
-			style={{
-				'boxShadow':' 0px 4px 4px 0px rgba(217, 217, 217, 0.25)'
-
-			}}
-			>
-				{/* taps container */}
-				<div className="flex justify-center mt-[42px] ">
-					<div className="w-[255px] h-[40px] rounded-[24px] p-[10px] bg-[#1D4179] text-white text-center ">{t("login")}</div>
-					<div className="w-[255px] h-[40px] rounded-[24px] p-[10px]  text-center "> {!token && (
-						<span className="block text-center  dark:text-neutral-300 ">
-							{/* {t("newUser")} */}
-							 {` `}
-							<Link to="/signup">
-								<span className="">
-									{/* {t("createAnAccount")} */}
-									Sign up
-								</span>
-							</Link>
-							
-						</span>
-					)}</div>
-				</div>
-				<div className="mx-auto max-w-md space-y-14 " >
-					<div className="grid gap-10">
+			<div className="container mb-24 lg:mb-32">
+				<h2 className="my-20 flex items-center justify-center text-3xl font-semibold leading-[115%] text-neutral-900 dark:text-neutral-100 md:text-5xl md:leading-[115%]">
+					{t("login")}
+				</h2>
+				<div className="mx-auto max-w-md space-y-6">
+					<div className="grid gap-3">
 						{/* <LoginSocialFacebook
               appId={process.env.REACT_APP_FB_APP_ID || ""}
               fieldsProfile={
@@ -164,19 +145,19 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
 					</div>
 					{/* FORM */}
 					<form
-						className="grid grid-cols-1 gap-10 "
+						className="grid grid-cols-1 gap-6"
 						action="#"
 						method="post"
 						onSubmit={formSubmitHandler}
 					>
 						<label className="block">
-							<span className="text-[#69696A] dark:text-neutral-200">
-								{t("phoneNumber")}*
+							<span className="text-neutral-800 dark:text-neutral-200">
+								{t("phoneNumber")}
 							</span>
 							<Input
 								type="text"
 								placeholder="0105478...."
-								className="mt-2  [h-78px] rounded-[4px] text-[#69696A] p-0"
+								className="mt-1"
 								value={phone}
 								onChange={phoneChange}
 								onBlur={phoneBlur}
@@ -189,19 +170,19 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
 							)}
 						</label>
 						<label className="block">
-							<span className="text-[#69696A] dark:text-neutral-200 ">
+							<span className="text-neutral-800 dark:text-neutral-200">
 								{t("password")}
 							</span>
 							<OtpInput
 								value={password}
 								inputStyle={{
-									height: "100%",
-									width: '100%',
+									height: "3.5rem",
+									width: "3.5rem",
 									border: "1px solid rgb(67,56,202)",
 									borderRadius: 4,
 									color: "text-neutral-800 dark:text-neutral-200",
 									fontWight: "bolder",
-									fontSize: "1rem",
+									fontSize: "1.5rem",
 									marginTop: "0.5rem",
 								}}
 								hasErrored={password?.length <= 6}
@@ -230,18 +211,28 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
 								</span>
 							</Link>
 						</label>
-						<ButtonPrimary type="submit" className="  rounded-[16px]">{t("continue")}</ButtonPrimary>
+						<ButtonPrimary type="submit">{t("continue")}</ButtonPrimary>
 					</form>
 					{/* ==== */}
 					{/* OR */}
 					<div className="relative text-center">
-						{/* <span className="relative z-10 inline-block bg-white px-4 text-sm font-medium dark:bg-neutral-900 dark:text-neutral-400">
+						<span className="relative z-10 inline-block bg-white px-4 text-sm font-medium dark:bg-neutral-900 dark:text-neutral-400">
 							{t("or")}
-						</span> */}
+						</span>
 						<div className="absolute left-0 top-1/2 w-full -translate-y-1/2 transform border border-neutral-100 dark:border-neutral-800"></div>
 					</div>
 
-					
+					{!token && (
+						<span className="block text-center text-neutral-700 dark:text-neutral-300 ">
+							{t("newUser")} {` `}(
+							<Link to="/signup">
+								<span className="text-primary-6000">
+									{t("createAnAccount")}
+								</span>
+							</Link>
+							)
+						</span>
+					)}
 				</div>
 			</div>
 		</div>

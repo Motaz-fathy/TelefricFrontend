@@ -60,7 +60,6 @@ export interface SectionGridFilterCardProps {
   trips: any;
   isLoading: boolean;
   date?: any;
-  refavtord_data?: any;
   travelFrom?: any;
   setPage?: any;
   cityFrom?: any;
@@ -68,6 +67,7 @@ export interface SectionGridFilterCardProps {
   paginationStatus: boolean;
   filterStation:string;
   filterToStation:string;
+  filterBus:string;
 }
 
 // Define a function component called SectionGridFilterCard that takes in the SectionGridFilterCardProps interface as props
@@ -75,7 +75,6 @@ const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
   className = "",
   city,
   trips,
-  refavtord_data,
   isLoading,
   travelFrom,
   date,
@@ -84,7 +83,8 @@ const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
   travelTo,
   paginationStatus,
   filterStation,
-  filterToStation
+  filterToStation,
+  filterBus
 }) => {
   // Use the useTranslation hook to get the translation function
   const { t } = useTranslation();
@@ -95,29 +95,24 @@ const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
   const stationsToLength = trip.stations_to.length;
   return acc + stationsFromLength * stationsToLength;
 }, 0);
-function removeDuplicates(travelData:any) {
-  const uniqueData = [];
-  const keySet:string[] = [];
-  
-  for (const item of travelData) {
-    const key = `${item.trip_url}`;
-  
-    if (!keySet.includes(key)) {
-    uniqueData.push(item);
-    keySet.push(key);
-    }
-  }
-  
-  return uniqueData;
-  }
-  
-  refavtord_data = removeDuplicates(refavtord_data);
+   
   return (
     <div
       className={`nc-SectionGridFilterCard ${className} `}
       data-nc-id="SectionGridFilterCard"
     >
-     
+      {/* The heading */}
+      {/* <Heading2
+        heading={
+          t("egypt") + " - " + (decodeURIComponent(newCity ?? "") ?? "" ?? "")
+        }
+        subHeading={<></>}
+      /> */}
+      {/* The tab filters */}
+      {/* <div className="mb-8 lg:mb-11">
+        <TabFilters />
+      </div> */}
+      {/* The flight cards */}
       <div className="grid grid-cols-1 gap-6 rounded-3xl   lg:dark:bg-black/20">
         {/* The results count and "All tickets" label */}
         <div className="flex flex-row  w-full justify-between mt-6">
@@ -131,7 +126,31 @@ function removeDuplicates(travelData:any) {
           </div>
         </div>
         {/* The flight cards themselves */}
-        <FlightCard refactoredData={refavtord_data}/>
+        {trips?.length > 0 &&
+          trips.map((item: any, index: number) => {
+	
+        return item?.cities_to.map((trip: any) => {
+
+              if (trip?.id === +travelTo) {
+                return (
+                    <FlightCard
+                      travelFrom={decodeURIComponent(cityFrom ?? "")}
+                      travel={travelFrom}
+                      key={index}
+                      data={item}
+                      cityTo={trip}
+                      date={date}
+                      filterStation={filterStation}
+                      filterToStation={filterToStation}
+                      filterBus={filterBus}
+                    />
+                );
+              } else {
+                return <></>;
+              }
+            });
+          })}
+        {/* The "Show More" button */}
         {paginationStatus && (
           <div className="mt-12 flex items-center justify-center">
             <ButtonPrimary onClick={setPage} loading={isLoading}>
