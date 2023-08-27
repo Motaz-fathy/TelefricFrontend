@@ -30,7 +30,7 @@ const ListingCarPage: FC<ListingCarPageProps> = ({ className = "" }) => {
 	const [page, setPage] = useState<number>(1);
 	const [cityFrom, setCityFrom] = useState<any>("");
 	const [paginationStatus, setPaginationStatus] = useState<boolean>(true);
-
+    
 	useEffect(() => {
 		if (!!search) {
 			const data = search.slice(1).split("/");

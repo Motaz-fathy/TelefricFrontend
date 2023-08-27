@@ -35,6 +35,7 @@ import MaritimeCheckout from "containers/MerintmeCheckout";
 import CheckOutPrivatePage from "containers/CheckOutPage/CheckOutPrivate";
 import { PrivateTrip } from "containers/ListPrivateTrip/PrivateTrip";
 import { PrivateTripId } from "containers/ListPrivateTrip/PrivateTripId";
+import { AddAdressTrip } from "containers/ListPrivateTrip/AddAdressTrip";
 
 export const pages: any[] = [
 	{ path: "/", exact: true, component: PageHome },
@@ -94,6 +95,7 @@ export const pages: any[] = [
 
 	{ path: "/private-trip", component: PrivateTrip },
 	{ path: "/private-trip/trip-Id", component: PrivateTripId },
+	{ path: "/private-trip/add-address-trip", component: AddAdressTrip },
 
 
 ];
