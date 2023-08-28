@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes , Route } from "react-router-dom";
 import { Page } from "./types";
 import ScrollToTop from "./ScrollToTop";
 import Footer from "shared/Footer/Footer";
@@ -36,11 +36,23 @@ import CheckOutPrivatePage from "containers/CheckOutPage/CheckOutPrivate";
 import { PrivateTrip } from "containers/ListPrivateTrip/PrivateTrip";
 import { PrivateTripId } from "containers/ListPrivateTrip/PrivateTripId";
 import { AddAdressTrip } from "containers/ListPrivateTrip/AddAdressTrip";
+import Profile from "containers/Profile/Profile";
+import Address from "containers/Address/Address";
+import ChangePassord from "containers/ChangePassword/ChangePassord";
+import Booking from "containers/Booking/Booking";
+import AdressDetail from "containers/AdressDetail/AdressDetail";
 
 export const pages: any[] = [
 	{ path: "/", exact: true, component: PageHome },
 	{ path: "/#", exact: true, component: PageHome },
-
+	{ path: "/profile",  component: Profile },
+	
+	{ path: "/address",  component: AdressDetail },
+	{ path: "/addaddress",  component: Address },
+	{ path: "/changepassword",  component: ChangePassord },
+	{ path: "/booking",  component: Booking },
+	
+	
 	//
 	//
 	// {

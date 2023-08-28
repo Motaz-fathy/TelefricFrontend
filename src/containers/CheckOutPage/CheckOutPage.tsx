@@ -304,36 +304,12 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
 		);
 	};
 	// if (!!iframe) return <></>;
-	function handleBackClick() {
-		window.history.back();
-	  }
+
 	return (
 		<div className={`nc-CheckOutPage ${className}`} data-nc-id="CheckOutPage">
-			<div className="flex w-full flex-col h-[15vh] bg-[#1d4179] ">
-				{/* top nav */}
-				<div className="w-[80vw] flex relative flex-row justify-between mx-auto  h-[50px] text-white ">
-					
-				<button className="flex justify-between items-center w-[3vw]" onClick={handleBackClick}>
-					<svg width="10" height="17" viewBox="0 0 10 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M8.75 16.1538L1.25 8.65381L8.75 1.15381" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
-					back
-				</button>
-				</div>
-				{/* center data */}
-				<div className="flex flex-col items-center justify-center text-white">
-					<span className="w-[20vh] absolute z-0 h-[20vh]   bg-[#1d4179] rotate-45 rounded"></span>
-					<h3 className="z-10">
-						{travelFrom} - {travelTo}
-					</h3>
-					<h3 className="z-10">
-						{date} . Economy class
-					</h3>
-				</div>
-
-			</div>
 			<main className="container mt-11 mb-24 flex flex-col-reverse lg:mb-32 lg:flex-row">
 				<div className="w-full lg:w-3/5 lg:pr-10 xl:w-2/3 ">{renderMain()}</div>
+				544
 			</main>
 			<PaymentDetailsModal
 				iframe={iframe}

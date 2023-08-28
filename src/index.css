@@ -298,3 +298,14 @@
 	border-left: 25px solid transparent;
 	border-bottom: 30.40px solid #DDE2EB;
 }
+.PhoneInput {
+    width: 70%;
+	
+  }
+  .PhoneInput .PhoneInputCountry{
+    margin-top: -15px;
+  }
+  .two{
+	display:  grid;
+	grid-template-columns: 1fr 2fr;
+  }

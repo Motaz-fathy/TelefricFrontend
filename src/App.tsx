@@ -32,7 +32,7 @@ function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<AppContext.Provider value={{ name, phone, email, token }}>
-				<div className="h-full w-full bg-[#E9EBF8]  text-base text-neutral-900 ltr:font-alkatra rtl:font-messiri dark:bg-neutral-900 dark:text-neutral-200">
+				<div className="h-full w-full bg-white  text-base text-neutral-900 ltr:font-alkatra rtl:font-messiri dark:bg-neutral-900 dark:text-neutral-200">
 					<MyRouter />
 				</div>
 				<ToastContainer className="toast" />

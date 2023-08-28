@@ -3,14 +3,14 @@ import classes from "./DepartureCard.module.css";
 
 interface DepartureProps {
 	title: any;
-	stations: [];
-	city: string;
+	stationFrom: [];
+	travelTo: string;
     onStation: (station: any)=> void;
 }
 const DepartureCard: FC<DepartureProps> = ({
 	title,
-	stations,
-	city,
+	stationFrom,
+	travelTo,
     onStation
 }) => {
 	const [select ,setSelect] = useState<any>(null);
@@ -43,8 +43,8 @@ const DepartureCard: FC<DepartureProps> = ({
 				</svg>
 			</header>
 			<main className={classes.main}>
-				<span className={classes.main_label}>{city}</span>
-				{stations.map((trip , i) => (
+				<span className={classes.main_label}>{travelTo}</span>
+				{stationFrom.map((trip , i) => (
 					<div className={classes.ele} key={trip}>
 						<input type="checkbox" id={trip} name={trip} value={trip} onClick={tripHandler} checked={i === select}
             onChange={() => onChange(i)} />

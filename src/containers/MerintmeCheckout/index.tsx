@@ -203,7 +203,7 @@ const MaritimeCheckout: FC<CheckOutPageProps> = ({ className = "" }) => {
 				<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
 				<div>
 					<div>
-						{/* <h3 className="text-2xl font-semibold">{t("tripDate")}</h3> */}
+						<h3 className="text-2xl font-semibold">{t("tripDate")}</h3>
 						<NcModal
 							renderTrigger={openModal => <></>}
 							renderContent={() => <></>}
@@ -232,10 +232,10 @@ const MaritimeCheckout: FC<CheckOutPageProps> = ({ className = "" }) => {
 							)}
 						/>
 					</div> */}
-					<div className="mt-2 flex ">
-						<div className="w-full p-8 bg-white rounded-lg">
-							<div className="w-[100%] ">
-								<div className=" mb-6  py-8">
+					<div className="mt-2 flex items-center justify-center">
+						<div className="container mx-auto max-w-screen-lg">
+							<div>
+								<div className=" mb-6 py-8">
 									<div className=" text-lg ">
 										<div className="w-full">
 											<div className="mb-4 grid grid-cols-1 gap-4 gap-y-2 md:grid-cols-5">
@@ -272,10 +272,10 @@ const MaritimeCheckout: FC<CheckOutPageProps> = ({ className = "" }) => {
 											{formVal.map((item, index) => (
 												<>
 													<div className="mb-4 grid grid-cols-1 gap-4 gap-y-2 border-b border-gray-200 pb-5 md:grid-cols-5">
-														<div className="md:col-span-2">
+														<div className="md:col-span-12">
 															<label htmlFor="first_name">
 																{/* {t("firstName")}  */}
-																firs name
+																Full name
 															</label>
 															<div className="mt-1  flex h-10 items-center rounded border border-gray-200">
 																<input
@@ -290,7 +290,7 @@ const MaritimeCheckout: FC<CheckOutPageProps> = ({ className = "" }) => {
 															</div>
 														</div>
 
-														<div className="md:col-span-1">
+														{/* <div className="md:col-span-1">
 															<label htmlFor="middle_name">
 																{t("middleName")}
 															</label>
@@ -305,9 +305,9 @@ const MaritimeCheckout: FC<CheckOutPageProps> = ({ className = "" }) => {
 																	required
 																/>
 															</div>
-														</div>
+														</div> */}
 
-														<div className="md:col-span-2">
+														{/* <div className="md:col-span-2">
 															<label htmlFor="last_name">{t("lastName")}</label>
 															<div className="mt-1 flex h-10 items-center rounded border border-gray-200">
 																<input
@@ -320,8 +320,8 @@ const MaritimeCheckout: FC<CheckOutPageProps> = ({ className = "" }) => {
 																	required
 																/>
 															</div>
-														</div>
-														<div className="md:col-span-3">
+														</div> */}
+														{/* <div className="md:col-span-3">
                             <label htmlFor="nationality_id">
                               {t("nationalId")}
                             </label>
@@ -335,9 +335,9 @@ const MaritimeCheckout: FC<CheckOutPageProps> = ({ className = "" }) => {
                               defaultValue={item.nationality_id || ""}
                               onChange={(e) => onHandle(e, index)}
                             />
-                          </div>
+                          </div> */}
 
-														<div className="md:col-span-2">
+														<div className="md:col-span-6">
 															<label htmlFor="passport_number">
 																{t("passportNumber")}
 															</label>
@@ -353,7 +353,7 @@ const MaritimeCheckout: FC<CheckOutPageProps> = ({ className = "" }) => {
 															/>
 														</div>
 
-														<div className="md:col-span-3">
+														<div className="md:col-span-5">
 															<label htmlFor="passport_created_date">
 																{t("createdat")}
 															</label>
@@ -369,7 +369,7 @@ const MaritimeCheckout: FC<CheckOutPageProps> = ({ className = "" }) => {
 															/>
 														</div>
 
-														<div className="md:col-span-2">
+														{/* <div className="md:col-span-2">
 															<label htmlFor="dob"> {t("birthDate")}</label>
 															<input
 																type="date"
@@ -381,7 +381,7 @@ const MaritimeCheckout: FC<CheckOutPageProps> = ({ className = "" }) => {
 																placeholder={t("createdat")!}
 																required
 															/>
-														</div>
+														</div> */}
 													</div>
 													{!!index && (
 														<div

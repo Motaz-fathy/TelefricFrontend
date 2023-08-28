@@ -11,15 +11,14 @@ import { showApiErrorMessages } from "utils";
 import { toast } from "react-toastify";
 import { BriefcaseIcon } from "@heroicons/react/24/solid";
 import homeBg2 from "images/homeBg3.png";
-import { forEach, set, values } from "lodash";
+import { forEach, set } from "lodash";
 import SeatCard from "components/SeatCard/SeatCard";
 import OpratorCard from "components/OpratorCard/OpratorCard";
 import DepartureCard from "components/departureCard/DepartureCard";
 import PriceCard from "components/PriceCard/PriceCard";
 import BusTimeCard from "components/BusTimeCard/BusTimeCard";
 // import TripAnalyzer from "./TripAnalys";
-import classes from "components/departureCard/DepartureCard.module.css";
-// D:\work\telfric\web site\Telefric\src\components\departureCard\DepartureCard.module.css
+
 export interface ListingFlightsPageProps {
 	className?: string;
 }
@@ -31,22 +30,16 @@ const ListingBusPage: FC<ListingFlightsPageProps> = ({ className = "" }) => {
 
 	const [travelTo, setTravelTo] = useState<string>("");
 	const [travelFrom, setTravelFrom] = useState<string>("");
-	
 	const [trips, setTrips] = useState<any>([]);
-	const [refactoredTrips, setRefactoredTrips] = useState<any>([]);
-	const [filterdTrips, setFilterdTrips] = useState<any>([]);
 	const [stationFrom , setStationFrom] = useState<any>([]);
-	const [operators, setOperators] = useState<any>([]);
 	const [stationTo , setStationTo]= useState<any>([]);
 	const [city, setCity] = useState<string>("");
 	const [page, setPage] = useState<number>(1);
 	const [cityFrom, setCityFrom] = useState<any>("");
 	const [paginationStatus, setPaginationStatus] = useState<boolean>(true);
 	const [filterStation , setFilterStation] = useState<string>("");
-	const [filterCompany , setFilterCompany] = useState<string>("");
-	let counter:any  = []
-	let allTrips_filtered:any = [];
 	const [filterToStation , setFilerToStation] = useState<string>("");
+	const [filterBus , setFilterBus] = useState<string>("");
 	// after filtration
 	const [FinalTrips , SetFinalTrips] = useState<any>([]);
 	useEffect(() => {
@@ -62,24 +55,7 @@ const ListingBusPage: FC<ListingFlightsPageProps> = ({ className = "" }) => {
 		}
 	}, [search]);
 	const [loading, setLoading] = useState<boolean>(false);
-	interface City {
-		id: number;
-		name: string;
-	  }
-	function cityName(cities: City[], id: number): string | undefined {
-		const city = cities.find((city) => city.id === id);
-		return city? city.name : undefined;
-	  }
-	  function getDuration(startTime: string, endTime: string): string {
-		const start = new Date(`1970-01-01T${startTime}Z`);
-		const end = new Date(`1970-01-01T${endTime}Z`);
-		const duration = end.getTime() - start.getTime();
-	  
-		const hours = Math.floor(duration / (1000 * 60 * 60));
-		const minutes = Math.floor((duration / (1000 * 60)) % 60);
-	  
-		return `${hours}h ${minutes}m`;
-	  }
+
 	const getTripsBus = async () => {
 		setLoading(true);
 
@@ -91,14 +67,11 @@ const ListingBusPage: FC<ListingFlightsPageProps> = ({ className = "" }) => {
 			!!travelFrom &&
 			!!travelTo
 		) {
-			
 			await searchTrip({ date, city_to: travelTo, city_from: travelFrom }, page)
 				.then((res: any) => {
 					if (res?.data?.data.length) {
 						setTrips((prev: any) => [...prev, ...res?.data?.data]);
 						SetFinalTrips((prev: any) => [...prev, ...res?.data?.data]);
-						
-						
 			
 					} else if (page > 1) {
 						setPaginationStatus(false);
@@ -117,11 +90,28 @@ const ListingBusPage: FC<ListingFlightsPageProps> = ({ className = "" }) => {
 				});
 		}
 	};
-	
+	type Trip = {
+		arrival_at: string;
+		name: string;
+		// other properties...
+	  };
 	  
-	
+	  type TimeWithStation = {
+		time: string;
+		station: string;
+	  };
+	  
+	  const list_times_with_count_trips_for_each = (trips: Trip[]): TimeWithStation[] => {
+		const list_times: TimeWithStation[] = [];
+		trips.forEach((trip) => {
+		  if (!list_times.some((time) => time.time === trip.arrival_at)) {
+			list_times.push({ time: trip.arrival_at, station: trip.name });
+		  }
+		});
+		return list_times;
+	  };
 	useEffect(() => {
-		
+
 		if (
 			travelTo !== undefined &&
 			travelTo !== "undefined" &&
@@ -135,208 +125,68 @@ const ListingBusPage: FC<ListingFlightsPageProps> = ({ className = "" }) => {
 		}
 	}, [travelTo, travelFrom, page, date]);
 
-	let travelData: { classes: string,travel_from: string, travel_to: string,gateway_id:string,arrival_at:string  }[] =trips.flatMap((trip:any) => trip.stations_from.flatMap((itemFrom:any) =>
-	trip.stations_to.map((itemTo:any) => (
-	  { travel_from: itemFrom.name,
-		trip_url:`/checkout/?${trip.date}/${itemFrom.id}/${itemTo.id}/${trip.id}/${trip.price_start_with}/${itemFrom.id}/${itemTo.id}/${trip.company}/${trip.bus.category}`,
-		travel_at:itemFrom.arrival_at,
-		classes:trip.bus.category,
-		city_from_name:cityName(trip.cities_from,itemFrom.city_id),
-		city_from:itemFrom.city_id,
-		city_to:itemTo.city_id,
-		city_to_name:cityName(trip.cities_to,itemTo.city_id),
-		travel_to: itemTo.name,arrival_at:itemTo.arrival_at,
-		gateway_id:trip.gateway_id,
-		duration : getDuration(itemFrom.arrival_at,itemTo.arrival_at ),
-		prices_start_with:trip.prices_start_with.original_price, //their is more than tis opj like offer and after offer price
-		available_seats:trip.available_seats 
-	  }
-	))
-  ))
-  function removeDuplicates(travelData:any) {
-	const uniqueData = [];
-	const keySet:string[] = [];
-  
-	for (const item of travelData) {
-	  const key = `${item.trip_url}`;
-	//   console.log(88888888888888888);
-	//   console.log(key,keySet);
-	  
-  
-	  if (!keySet.includes(key)) {
-		uniqueData.push(item);
-		keySet.push(key);
-	  }
-	}
-  
-	return uniqueData;
-  }
-  
-  travelData = removeDuplicates(travelData);
-  
-	  
-	const operatorsCompo = (type:any) => {
-		let selected_company = '';
-  
-		function onChange(e:any, i:any) {
-		  const company = e.target.value;
-		  if (selected_company === 'All') {
-			setFilterdTrips(travelData);
-		  } else if (selected_company === company) {
-			selected_company = '';
-		  } else {
-			selected_company = company;
-		  }
-		  
-		  console.log(filterdTrips, 'refactoredTripos');
-		  
-		  const filteredTrips = [];
-		  
-		  if (filterdTrips.length > 0) {
-			for (let k = 0; k < filterdTrips.length; k++) {
-			  if (type === "operators" && (filterdTrips[k].gateway_id === selected_company || selected_company === 'all')) {
-				filteredTrips.push(filterdTrips[k]);
-			  }
-			  if (type === "station_from" && (filterdTrips[k].travel_from === selected_company || selected_company === 'all')) {
-				filteredTrips.push(filterdTrips[k]);
-			  }
-			  if (type === "station_to" && (filterdTrips[k].travel_to === selected_company || selected_company === 'all')) {
-				filteredTrips.push(filterdTrips[k]);
-			  }
-			  if (type === "classes" && (filterdTrips[k].classes === selected_company || selected_company === 'all')) {
-				filteredTrips.push(filterdTrips[k]);
-			  }
-			}
-			setFilterdTrips(filteredTrips);
-		  } else if (travelData.length > 0) {
-			const allTripsFiltered = [];
-			for (let k = 0; k < travelData.length; k++) {
-			  if (type === "operators" && (travelData[k].gateway_id === selected_company || selected_company === 'all')) {
-				allTripsFiltered.push(travelData[k]);
-			  }
-			  if (type === "station_from" && (travelData[k].travel_from === selected_company || selected_company === 'all')) {
-				allTripsFiltered.push(travelData[k]);
-			  }
-			  if (type === "station_to" && (travelData[k].travel_to === selected_company || selected_company === 'all')) {
-				allTripsFiltered.push(travelData[k]);
-			  }
-			  if (type === "classes" && (travelData[k].classes === selected_company || selected_company === 'all')) {
-				allTripsFiltered.push(travelData[k]);
-			  }
-			}
-			setFilterdTrips(allTripsFiltered);
-		  } else {
-			setFilterdTrips(travelData);
-		  }
-		}
-		
-		let companies = ['All'];
-		const counter = [];
-		
-		if (filterdTrips.length > 0) {
-		  for (let i = 0; i < filterdTrips.length; i++) {
-			if (type === "operators" && !companies.includes(filterdTrips[i].gateway_id)) {
-			  companies.push(filterdTrips[i].gateway_id);
-			  counter.push({
-				name: filterdTrips[i].gateway_id,
-				counter: 0
-			  });
-			}
-			if (type === "station_from" && !companies.includes(filterdTrips[i].travel_from)) {
-			  companies.push(filterdTrips[i].travel_from);
-			  counter.push({
-				name: filterdTrips[i].travel_from,
-				counter: 0
-			  });
-			}
-			if (type === "station_to" && !companies.includes(filterdTrips[i].travel_to)) {
-			  companies.push(filterdTrips[i].travel_to);
-			  counter.push({
-				name: filterdTrips[i].travel_to,
-				counter: 0
-			  });
-			}
-			if (type === "classes" && !companies.includes(filterdTrips[i].classes)) {
-			  companies.push(filterdTrips[i].classes);
-			  counter.push({
-				name: filterdTrips[i].classes,
-				counter: 0
-			  });
-			}
-		  }
-		} else if (travelData.length > 0) {
-		  for (let i = 0; i < travelData.length; i++) {
-			if (type === "operators" && !companies.includes(travelData[i].gateway_id)) {
-			  companies.push(travelData[i].gateway_id);
-			  counter.push({
-				name: travelData[i].gateway_id,
-				counter: 0
-			  });
-			}
-			if (type === "station_from" && !companies.includes(travelData[i].travel_from)) {
-			  companies.push(travelData[i].travel_from);
-			  counter.push({
-				name: travelData[i].travel_from,
-				counter: 0
-			  });
-			}
-			if (type === "station_to" && !companies.includes(travelData[i].travel_to)) {
-			  companies.push(travelData[i].travel_to);
-			  counter.push({
-				name: travelData[i].travel_to,
-				counter: 0
-			  });
-			}
-			if (type === "classes" && !companies.includes(travelData[i].classes)) {
-			  companies.push(travelData[i].classes);
-			  counter.push({
-				name: travelData[i].classes,
-				counter: 0
-			  });
-			}
-		  }
-		}
-		
-		function is_Checked_true(company:any) {
-		  return selected_company === company;
-		}
-		
-		  
-		return (
-		  <div className={classes.card}>
-			<header className={classes.cardHeader}>
-			  <h2>{type === 'operators'? 'Operator':type === 'station_from'? "Departure station" :type === 'classes'? "Seat classes" :"Arrival station" }</h2>
-			  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path fillRule="evenodd" clipRule="evenodd" d="M11.4708 7.72001C11.6114 7.57956 11.8021 7.50067 12.0008 7.50067C12.1996 7.50067 12.3902 7.57956 12.5308 7.72001L20.0308 15.22C20.1045 15.2887 20.1636 15.3715 20.2046 15.4635C20.2456 15.5555 20.2676 15.6548 20.2694 15.7555C20.2712 15.8562 20.2527 15.9562 20.2149 16.0496C20.1772 16.143 20.1211 16.2278 20.0499 16.299C19.9786 16.3703 19.8938 16.4264 19.8004 16.4641C19.707 16.5019 19.607 16.5204 19.5063 16.5186C19.4056 16.5168 19.3063 16.4948 19.2143 16.4538C19.1223 16.4128 19.0395 16.3537 18.9708 16.28L12.0008 9.31001L5.03082 16.28C4.88865 16.4125 4.7006 16.4846 4.5063 16.4812C4.312 16.4778 4.12661 16.399 3.9892 16.2616C3.85179 16.1242 3.77308 15.9388 3.76965 15.7445C3.76622 15.5502 3.83834 15.3622 3.97082 15.22L11.4708 7.72001Z" fill="#DDE2EB" />
-			  </svg>
-			</header>
-	  
-			<main className={classes.main}>
-			  {companies.map((company, i) => (
-				<div className={classes.ele} key={company}>
-				  <input
-					type="radio"
-					id={company}
-					name="company"
-					value={company}
-					onClick={companyHandler}
-					onChange={(e) => onChange(e, i)}
-					checked={is_Checked_true(company)}
-				  />
-				  <label htmlFor={company}>{company}</label>
-				</div>
-			  ))}
-			</main>
-		  </div>
-		);
-	  }
-
-	const companyHandler = (company:any)=>{
-		setFilterCompany(company);
-	}
-	console.log(travelData);
+	let stationFromval:any = [] ;
 	
-		return (
+	useEffect(()=>{
+		if(trips.length > 0){
+			for(let i=0; i<trips.length ; i++){
+					stationFromval = [ ...stationFromval, ...trips[i].stations_from.map((item:any)=> item.name )] 
+			}
+				let duplactiom =  new Set<string>(stationFromval);
+			stationFromval =Array.from(duplactiom);
+			setStationFrom(stationFromval);
+		}
+	} , [trips])
+	let stationToVal:any = [];
+	useEffect(()=>{
+		if(FinalTrips.length > 0){
+			for(let i=0; i<FinalTrips.length ; i++){
+					stationToVal = [ ...stationToVal, ...FinalTrips[i].stations_to.map((item:any)=> item.name )] 
+			}
+				let duplactiom =  new Set<string>(stationToVal);
+			stationToVal =Array.from(duplactiom);
+			setStationTo(stationToVal);
+		}
+	} , [FinalTrips])
+	
+	const stationHandler = (station:any)=>{
+		setFilterStation(station);
+	}
+	const stationToHandler = (station:any) =>{
+		setFilerToStation(station);
+	}
+	const BusHandler = (busName: any) =>{
+			setFilterBus(busName);
+	}
+	let stationF:any = [];
+	function setPlace (place:string){
+		if(trips.length > 0){
+			for(let i=0 ; i<trips.length ; i++){
+				for(let j=0 ; j<trips[i].stations_from.length ; j++ ){
+
+					if(trips[i].stations_from[j].name === place){
+				
+					stationF.push(trips[i]);
+				}}
+			}
+	}
+}
+useEffect(()=>{
+	setPlace(filterStation);
+	SetFinalTrips(stationF);
+	
+	} , [filterStation])
+	
+	let finalPrices = [];
+	let FPrice = [];
+		finalPrices = FinalTrips.map((trip:any)=>trip.pricing);
+			for(let i=0 ; i<finalPrices.length ; i++){
+				for(let j=0 ; j<finalPrices[i].length ; j++){
+			FPrice.push(finalPrices[i][j].final_price);
+				}
+			}
+	
+	return (
 		<div
 			className={`nc-ListingFlightsPage bg-[#dde2eb] relative overflow-hidden ${className}`}
 			data-nc-id="ListingFlightsPage"
@@ -366,7 +216,7 @@ const ListingBusPage: FC<ListingFlightsPageProps> = ({ className = "" }) => {
 						<div className="flex items-center">
 							<BriefcaseIcon className="h-5 w-5" />
 
-									<span className=" ">
+							<span className=" ">
 								{trips.length} {t("Bus")}
 							</span>
 						</div>
@@ -445,26 +295,26 @@ const ListingBusPage: FC<ListingFlightsPageProps> = ({ className = "" }) => {
 				{/* SECTION */}
 				<div className="flex flex-row   w-[85vw] justify-between">
 					<div className="lg:w-[30%] md:w-0 ">
+						Filter
 							<BusTimeCard height={true}/>
 							<PriceCard height={true}/>
-							{/* <SeatCard height={true} /> */}
-							{operatorsCompo("classes")}
-							{operatorsCompo("operators")}
-							{operatorsCompo("station_from")}
-							{operatorsCompo("station_to")}
+							<SeatCard height={true} />
+							<OpratorCard  onBus={BusHandler}/>
+							<DepartureCard title="Departure station"  travelTo={cityFrom} stationFrom={stationFrom} onStation={stationHandler} />
+							<DepartureCard title="Arrival station" travelTo={city} stationFrom={stationTo} onStation={stationToHandler} />
 							
 					</div>
 					<div className="lg:w-[70%] md:w-full ">{trips.length > 0 && (
 					<SectionGridFilterCard
-						trips={trips}
+						trips={FinalTrips}
 						city={city}
 						isLoading={loading}
 						className="pb-24 lg:pb-28"
 						date={date}
-						refavtord_data={filterdTrips.length > 0? filterdTrips :travelData}
 						filterStation= {filterStation}
 						filterToStation= {filterToStation}
 						travelFrom={travelFrom}
+						filterBus={filterBus}
 						travelTo={travelTo}
 						cityFrom={cityFrom}
 						setPage={() => setPage(page + 1)}
