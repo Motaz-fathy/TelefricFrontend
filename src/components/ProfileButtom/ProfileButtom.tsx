@@ -4,11 +4,13 @@ import classes from "./ProfileButtom.module.css";
 interface ProfileButtomProps{
     title: string;
     mt:boolean;
+    onClick: ()=>void
 
 }
 const ProfileButtom :FC<ProfileButtomProps> = ({
     title,
     mt,
+    onClick
   
 }) => {
 
@@ -19,9 +21,9 @@ const ProfileButtom :FC<ProfileButtomProps> = ({
     </button>
       )
     }
-
+    
   return (
-    <button className={classes.Edit}>
+    <button className={classes.Edit} onClick={onClick}>
     {title}
 </button>
   )
