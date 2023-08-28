@@ -41,7 +41,6 @@ const RentalCarSearchForm: FC<FlightSearchFormProps> = ({
 		moment().add(1, "day"),
 	);
 	const [dateFocused, setDateFocused] = useState<boolean>(false);
-
 	const [travelFrom, setTravelFrom] = useState<any>("");
 	const [travelTo, setTravelTo] = useState<any>("");
 	const [pickUpInputValue, setPickUpInputValue] = useState("");
@@ -50,16 +49,27 @@ const RentalCarSearchForm: FC<FlightSearchFormProps> = ({
 		FocusedInputShape | "dropOffInput" | null
 	>(null);
 
+	const date : any = dateValue?.format("YYYY-MM-DD")
+	window.localStorage.setItem("date" , date)
+	window.localStorage.setItem("travelFrom" , JSON.stringify(travelFrom.id))
+	window.localStorage.setItem("travelTo" , JSON.stringify(travelTo.id))
+
+	
+
 	const navigate = useNavigate();
 
 	const [dropOffLocationType, setDropOffLocationType] = useState<
 		"roundTrip" | "oneWay" | ""
 	>("roundTrip");
+
 	const [guests, setGuests] = useState(1);
 	const [dateRangeValue, setDateRangeValue] = useState<DateRage>({
 		startDate: null,
 		endDate: null,
 	});
+	window.localStorage.setItem("dropOffLocationType" , JSON.stringify(dropOffLocationType))
+	window.localStorage.setItem("guests" , JSON.stringify(guests))
+
 	const { search } = useLocation();
 
 	// USER EFFECT
@@ -241,9 +251,9 @@ const RentalCarSearchForm: FC<FlightSearchFormProps> = ({
 								className="mr-5 w-auto rtl:ml-5"
 								buttonSubmitHref={() =>
 									navigate(
-										`/listing-bus?${dateValue?.format("YYYY-MM-DD")}/${
+										`/private-trip?${dateValue?.format("YYYY-MM-DD")}/${
 											travelTo?.id
-										}/${travelFrom?.id}/${
+										}/${ travelFrom?.id}/${
 											i18next.language === "en"
 												? travelTo?.name_en
 												: travelTo?.name_ar
@@ -252,6 +262,7 @@ const RentalCarSearchForm: FC<FlightSearchFormProps> = ({
 												? travelFrom?.name_en
 												: travelFrom?.name_ar
 										}`,
+
 									)
 								}
 							/>
