@@ -123,7 +123,7 @@ export const PrivateTrip: FC<PrivateTripPror> = () => {
 
               <a
                 className="ml-[16px] flex h-14 w-[110px] items-center justify-center rounded-[9px] bg-[#1D4179] text-center text-[20px] text-white"
-                href="/private-trip/add-address-trip"
+                href={`/private-trip/${item.bus.id}`}
               >
                 select
               </a>

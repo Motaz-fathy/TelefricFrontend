@@ -94,7 +94,7 @@ export const pages: any[] = [
 	// 
 
 	{ path: "/private-trip", component: PrivateTrip },
-	{ path: "/private-trip/trip-Id", component: PrivateTripId },
+	{ path: "/private-trip/:trip_Id", component: PrivateTripId },
 	{ path: "/private-trip/add-address-trip", component: AddAdressTrip },
 
 
